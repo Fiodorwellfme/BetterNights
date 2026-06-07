@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <AssemblyName>Fiodor.BetterNights</AssemblyName>
+    <RootNamespace>BetterNights</RootNamespace>
+    <Description>Replaces the TOD night sky space texture.</Description>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <TarkovPath>D:\Games\Tarkov\SPT Main\</TarkovPath>
+    <ModName>BetterNights</ModName>
+    <PackageStagingDir>$(OutputPath)package</PackageStagingDir>
+    <PackagePluginDir>$(PackageStagingDir)\BepInEx\plugins\$(ModName)</PackagePluginDir>
+    <ReleaseDir>$(OutputPath)</ReleaseDir>
+    <ReleaseZip>$(ReleaseDir)$(ModName).zip</ReleaseZip>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="UnityAssetsSource\**\*.cs" />
+    <None Include="UnityAssetsSource\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(TarkovPath)EscapeFromTarkov_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="BepInEx">
+      <HintPath>$(TarkovPath)BepInEx\core\BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Comfort">
+      <HintPath>$(TarkovPath)EscapeFromTarkov_Data\Managed\Comfort.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(TarkovPath)EscapeFromTarkov_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>$(TarkovPath)EscapeFromTarkov_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(TarkovPath)EscapeFromTarkov_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+		<MakeDir Directories="$(ProjectDir)\..\..\BepInEx\plugins\$(ModName)" />
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ProjectDir)\..\..\BepInEx\plugins\$(ModName)" />
+
+		<RemoveDir Directories="$(PackageStagingDir)" Condition="Exists('$(PackageStagingDir)')" />
+		<MakeDir Directories="$(PackagePluginDir)" />
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PackagePluginDir)" />
+
+		<MakeDir Directories="$(ReleaseDir)" />
+		<Delete Files="$(ReleaseZip)" Condition="Exists('$(ReleaseZip)')" />
+		<Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;Compress-Archive -Path '$(PackageStagingDir)\*' -DestinationPath '$(ReleaseZip)' -Force&quot;" />
+	</Target>
+</Project>
