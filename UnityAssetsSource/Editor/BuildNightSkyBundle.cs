@@ -5,7 +5,6 @@ using UnityEngine;
 public static class BuildNightSkyBundle
 {
     private const string OutputPath = "AssetBundles";
-    private const string TexturePath = "Assets/StandardNight.png";
     private const string ShaderPath = "Assets/NightSkyEquirectangular.shader";
     private const string MaterialPath = "Assets/NightSkyMaterial.mat";
     private const string BundleName = "nightsky.bundle";
@@ -14,26 +13,11 @@ public static class BuildNightSkyBundle
     public static void CreateMaterial()
     {
         Shader shader = AssetDatabase.LoadAssetAtPath<Shader>(ShaderPath);
-        Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(TexturePath);
-
-        if (shader == null)
-        {
-            Debug.LogError($"Shader not found at {ShaderPath}");
-            return;
-        }
-
-        if (texture == null)
-        {
-            Debug.LogError($"Texture not found at {TexturePath}");
-            return;
-        }
-
         Material material = new Material(shader)
         {
             name = "NightSkyMaterial"
         };
 
-        material.SetTexture("_MainTex", texture);
         material.SetFloat("_Brightness", 0.5f);
         material.SetFloat("_Saturation", 2.5f);
         material.SetFloat("_BackgroundBrightness", 3f);
@@ -63,7 +47,6 @@ public static class BuildNightSkyBundle
         material.SetFloat("_RollDegrees", 0f);
 
         AssetDatabase.CreateAsset(material, MaterialPath);
-        SetBundleName(TexturePath);
         SetBundleName(ShaderPath);
         SetBundleName(MaterialPath);
         AssetDatabase.SaveAssets();

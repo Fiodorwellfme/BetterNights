@@ -8,9 +8,9 @@ namespace BetterNights;
 internal static class Settings
 {
     internal const string DefaultBundleFileName = "nightsky.bundle";
-    internal const string DefaultTextureAssetName = "assets/standardnight.png";
+    internal const string DefaultTextureAssetName = "assets/Ringed Brown Dwarf.png";
     internal const string DefaultMaterialAssetName = "assets/nightskymaterial.mat";
-    internal const string DefaultBackgroundTextureAssetName = "assets/Stars.png";
+    internal const string DefaultBackgroundTextureAssetName = "assets/Background Stars.png";
     internal const string DefaultTexturePropertyName = "_MainTex";
 
     internal static readonly List<ConfigEntryBase> ConfigEntries = new List<ConfigEntryBase>();
@@ -68,7 +68,7 @@ internal static class Settings
                 null,
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(TextureAssetName = config.Bind("Textures", "Sky Texture", "assets/standardnight.png",
+        ConfigEntries.Add(TextureAssetName = config.Bind("Textures", "Sky Texture", "assets/Ringed Brown Dwarf.png",
             CreateTextureAssetDescription(
                 GetTextureAssetNames(pluginDirectory, BundleFileName.Value, includeEmpty: false, DefaultTextureAssetName),
                 "Night sky texture.",
@@ -86,7 +86,7 @@ internal static class Settings
                 null,
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(BackgroundTextureAssetName = config.Bind("Textures", "BackgroundTextureAssetName", "assets/Stars.png",
+        ConfigEntries.Add(BackgroundTextureAssetName = config.Bind("Textures", "BackgroundTextureAssetName", "assets/Background Stars.png",
             CreateTextureAssetDescription(
                 GetTextureAssetNames(pluginDirectory, BackgroundBundleFileName.Value, includeEmpty: false, DefaultBackgroundTextureAssetName),
                 "Optional background star texture asset in the bundle.",
@@ -194,7 +194,7 @@ internal static class Settings
                 null,
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(MainBandCenterU = config.Bind("Sky", "MainBandCenterU", 0f,
+        ConfigEntries.Add(MainBandCenterU = config.Bind("Sky", "MainBandCenterU", 0.05f,
             new ConfigDescription(
                 "Main band horizontal center in normalized sky UV space.",
                 new AcceptableValueRange<float>(0f, 1f),
@@ -230,7 +230,7 @@ internal static class Settings
                 new AcceptableValueRange<float>(0f, 1f),
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = true })));
 
-        ConfigEntries.Add(MainVerticalFade = config.Bind("Sky", "MainVerticalFade", 0.5f,
+        ConfigEntries.Add(MainVerticalFade = config.Bind("Sky", "MainVerticalFade", 0.6f,
             new ConfigDescription(
                 "Soft vertical alpha fade at the top/bottom of the main texture UV range.",
                 new AcceptableValueRange<float>(0f, 1f),

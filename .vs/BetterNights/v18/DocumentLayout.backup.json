@@ -1,17 +1,17 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "E:\\Tarkov Clean\\SPT Dev\\Mods To Compile\\BetterNights\\",
+  "WorkspaceRootPath": "C:\\Games\\SPT\\Mods to compile\\BetterNights\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9D37B1A9-1F34-9369-07AB-07CBA5C74CC7}|BetterNights.csproj|e:\\tarkov clean\\spt dev\\mods to compile\\betternights\\settings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{9D37B1A9-1F34-9369-07AB-07CBA5C74CC7}|BetterNights.csproj|c:\\games\\spt\\mods to compile\\betternights\\settings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9D37B1A9-1F34-9369-07AB-07CBA5C74CC7}|BetterNights.csproj|solutionrelative:settings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Games\\Tarkov\\Unity mods\\New Unity Project\\Assets\\Editor\\BuildNightSkyBundle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9D37B1A9-1F34-9369-07AB-07CBA5C74CC7}|BetterNights.csproj|c:\\games\\spt\\mods to compile\\betternights\\betternights.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{9D37B1A9-1F34-9369-07AB-07CBA5C74CC7}|BetterNights.csproj|solutionrelative:betternights.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9D37B1A9-1F34-9369-07AB-07CBA5C74CC7}|BetterNights.csproj|e:\\tarkov clean\\spt dev\\mods to compile\\betternights\\betternights.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{9D37B1A9-1F34-9369-07AB-07CBA5C74CC7}|BetterNights.csproj|solutionrelative:betternights.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Games\\Tarkov\\Unity mods\\New Unity Project\\Assets\\Editor\\BuildNightSkyBundle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -25,7 +25,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "BuildNightSkyBundle.cs",
               "DocumentMoniker": "D:\\Games\\Tarkov\\Unity mods\\New Unity Project\\Assets\\Editor\\BuildNightSkyBundle.cs",
               "ToolTip": "D:\\Games\\Tarkov\\Unity mods\\New Unity Project\\Assets\\Editor\\BuildNightSkyBundle.cs",
@@ -37,24 +37,24 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Settings.cs",
-              "DocumentMoniker": "E:\\Tarkov Clean\\SPT Dev\\Mods To Compile\\BetterNights\\Settings.cs",
+              "DocumentMoniker": "C:\\Games\\SPT\\Mods to compile\\BetterNights\\Settings.cs",
               "RelativeDocumentMoniker": "Settings.cs",
-              "ToolTip": "E:\\Tarkov Clean\\SPT Dev\\Mods To Compile\\BetterNights\\Settings.cs",
+              "ToolTip": "C:\\Games\\SPT\\Mods to compile\\BetterNights\\Settings.cs",
               "RelativeToolTip": "Settings.cs",
-              "ViewState": "AgIAAHAAAAAAAAAAAAAAAIAAAABvAAAAAAAAAA==",
+              "ViewState": "AgIAADoAAAAAAAAAAAAQwEYAAABuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-07T13:36:09.822Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "BetterNights.csproj",
-              "DocumentMoniker": "E:\\Tarkov Clean\\SPT Dev\\Mods To Compile\\BetterNights\\BetterNights.csproj",
+              "DocumentMoniker": "C:\\Games\\SPT\\Mods to compile\\BetterNights\\BetterNights.csproj",
               "RelativeDocumentMoniker": "BetterNights.csproj",
-              "ToolTip": "E:\\Tarkov Clean\\SPT Dev\\Mods To Compile\\BetterNights\\BetterNights.csproj",
+              "ToolTip": "C:\\Games\\SPT\\Mods to compile\\BetterNights\\BetterNights.csproj",
               "RelativeToolTip": "BetterNights.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAoAAAApAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAoAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2026-06-07T10:31:54.373Z"
             }

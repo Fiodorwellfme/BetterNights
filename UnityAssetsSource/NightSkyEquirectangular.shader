@@ -107,8 +107,7 @@ Shader "Fiodor/Night Sky Equirectangular"
                 o.direction = normalize(v.vertex.xyz);
 
                 float3 worldPosition = mul(unity_ObjectToWorld, v.vertex).xyz;
-                float3 worldCenter = mul(unity_ObjectToWorld, float4(0, 0, 0, 1)).xyz;
-                o.worldDirection = normalize(worldPosition - worldCenter);
+                o.worldDirection = normalize(worldPosition - _WorldSpaceCameraPos.xyz);
                 return o;
             }
 
