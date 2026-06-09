@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BetterNights;
+namespace BetterNightSkies;
 
 internal sealed class VanillaSkyState
 {

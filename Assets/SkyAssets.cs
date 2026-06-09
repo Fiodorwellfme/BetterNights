@@ -1,11 +1,11 @@
 using UnityEngine;
 
-namespace BetterNights;
+namespace BetterNightSkies;
 
 internal sealed class SkyAssets
 {
     internal Texture2D SourceNightSkyTexture;
-    internal Texture2D BackgroundTexture;
+    internal Cubemap BackgroundCubemap;
     internal Material ReplacementMaterial;
 
     internal bool HasReplacement

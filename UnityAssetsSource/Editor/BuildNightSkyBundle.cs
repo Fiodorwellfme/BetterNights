@@ -5,6 +5,7 @@ using UnityEngine;
 public static class BuildNightSkyBundle
 {
     private const string OutputPath = "AssetBundles";
+    private const string BackgroundCubemapPath = "Assets/BackgroundStars_CubemapStrip_PosX_NegX_PosY_NegY_PosZ_NegZ.png";
     private const string ShaderPath = "Assets/NightSkyEquirectangular.shader";
     private const string MaterialPath = "Assets/NightSkyMaterial.mat";
     private const string BundleName = "nightsky.bundle";
@@ -13,14 +14,17 @@ public static class BuildNightSkyBundle
     public static void CreateMaterial()
     {
         Shader shader = AssetDatabase.LoadAssetAtPath<Shader>(ShaderPath);
+        Cubemap backgroundCubemap = AssetDatabase.LoadAssetAtPath<Cubemap>(BackgroundCubemapPath);
         Material material = new Material(shader)
         {
             name = "NightSkyMaterial"
         };
 
+        material.SetTexture("_BackgroundCube", backgroundCubemap);
         material.SetFloat("_Brightness", 0.5f);
         material.SetFloat("_Saturation", 2.5f);
         material.SetFloat("_BackgroundBrightness", 3f);
+        material.SetFloat("_BackgroundSaturation", 1f);
         material.SetFloat("_TodVisibility", 1f);
         material.SetFloat("_HorizonFadeStartDegrees", 0f);
         material.SetFloat("_HorizonFadeEndDegrees", 25f);
@@ -47,6 +51,7 @@ public static class BuildNightSkyBundle
         material.SetFloat("_RollDegrees", 0f);
 
         AssetDatabase.CreateAsset(material, MaterialPath);
+        SetBundleName(BackgroundCubemapPath);
         SetBundleName(ShaderPath);
         SetBundleName(MaterialPath);
         AssetDatabase.SaveAssets();

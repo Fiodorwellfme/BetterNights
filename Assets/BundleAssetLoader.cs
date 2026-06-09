@@ -4,7 +4,7 @@ using System.IO;
 using BepInEx.Logging;
 using UnityEngine;
 
-namespace BetterNights;
+namespace BetterNightSkies;
 
 internal sealed class BundleAssetLoader
 {
@@ -97,19 +97,19 @@ internal sealed class BundleAssetLoader
         if (bundle == null)
             yield break;
 
-        AssetBundleRequest textureRequest = bundle.LoadAssetAsync<Texture2D>(Settings.BackgroundTextureAssetName.Value);
-        yield return textureRequest;
-        assets.BackgroundTexture = textureRequest.asset as Texture2D;
+        AssetBundleRequest cubemapRequest = bundle.LoadAssetAsync<Cubemap>(Settings.BackgroundTextureAssetName.Value);
+        yield return cubemapRequest;
+        assets.BackgroundCubemap = cubemapRequest.asset as Cubemap;
 
-        if (assets.BackgroundTexture == null)
+        if (assets.BackgroundCubemap == null)
         {
             LogBundleAssetNames(bundle, bundlePath);
-            _log.LogError($"Background texture asset '{Settings.BackgroundTextureAssetName.Value}' was not found in {bundlePath}");
+            _log.LogError($"Background cubemap asset '{Settings.BackgroundTextureAssetName.Value}' was not found in {bundlePath}");
             yield break;
         }
 
-        assets.BackgroundTexture.wrapMode = TextureWrapMode.Repeat;
-        _log.LogInfo($"Loaded background star texture '{assets.BackgroundTexture.name}'.");
+        assets.BackgroundCubemap.wrapMode = TextureWrapMode.Clamp;
+        _log.LogInfo($"Loaded background star cubemap '{assets.BackgroundCubemap.name}'.");
     }
 
     private IEnumerator LoadMaterialAsync(AssetBundle bundle, Action<Material> onLoaded)

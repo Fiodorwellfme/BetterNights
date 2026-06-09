@@ -3,11 +3,12 @@ Shader "Fiodor/Night Sky Equirectangular"
     Properties
     {
         _MainTex ("Night Sky Texture", 2D) = "black" {}
-        _BackgroundTex ("Background Star Texture", 2D) = "black" {}
+        _BackgroundCube ("Background Star Cubemap", Cube) = "" {}
         _Tint ("Tint", Color) = (1, 1, 1, 1)
         _Brightness ("Brightness", Float) = 1
         _Saturation ("Saturation", Float) = 1
         _BackgroundBrightness ("Background Brightness", Float) = 0
+        _BackgroundSaturation ("Background Saturation", Float) = 1
         _TodVisibility ("TOD Visibility", Float) = 1
         _HorizonFadeStartDegrees ("Horizon Fade Start Degrees", Float) = 0
         _HorizonFadeEndDegrees ("Horizon Fade End Degrees", Float) = 25
@@ -58,11 +59,12 @@ Shader "Fiodor/Night Sky Equirectangular"
             #include "UnityCG.cginc"
 
             sampler2D _MainTex;
-            sampler2D _BackgroundTex;
+            samplerCUBE _BackgroundCube;
             float4 _Tint;
             float _Brightness;
             float _Saturation;
             float _BackgroundBrightness;
+            float _BackgroundSaturation;
             float _TodVisibility;
             float _HorizonFadeStartDegrees;
             float _HorizonFadeEndDegrees;
@@ -188,11 +190,9 @@ Shader "Fiodor/Night Sky Equirectangular"
                     mainV = deltaV / bandHeight + 0.5;
                 }
 
-                float backgroundU = (u - 0.5) * max(_BackgroundHorizontalScale, 0.0001) + 0.5;
-                float backgroundV = (v - 0.5) * max(_BackgroundVerticalScale, 0.0001) + 0.5;
-
-                backgroundU += _BackgroundHorizontalOffsetDegrees / 360.0;
-                backgroundV += _BackgroundVerticalOffsetDegrees / 180.0;
+                float3 backgroundDirection = worldDirection;
+                backgroundDirection = RotateY(backgroundDirection, _BackgroundHorizontalOffsetDegrees);
+                backgroundDirection = RotateX(backgroundDirection, _BackgroundVerticalOffsetDegrees);
 
                 // Do not emulate transparent padding with a huge mostly-empty texture:
                 // compressed bundle size is not runtime cost, and transparent pixels still
@@ -200,7 +200,9 @@ Shader "Fiodor/Night Sky Equirectangular"
                 // compact main texture safely and zero its alpha outside the intended band.
                 float safeMainV = saturate(mainV);
                 fixed4 mainColor = tex2D(_MainTex, float2(frac(mainU), safeMainV));
-                fixed4 backgroundColor = tex2D(_BackgroundTex, float2(frac(backgroundU), frac(backgroundV)));
+                fixed4 backgroundColor = texCUBE(_BackgroundCube, normalize(backgroundDirection));
+                float backgroundLuminance = dot(backgroundColor.rgb, float3(0.2126, 0.7152, 0.0722));
+                backgroundColor.rgb = lerp(backgroundLuminance.xxx, backgroundColor.rgb, _BackgroundSaturation);
 
                 float mainInsideV = 1.0;
                 if (_MainClampToTransparent > 0.5)

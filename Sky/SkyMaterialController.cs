@@ -1,7 +1,7 @@
 using BepInEx.Logging;
 using UnityEngine;
 
-namespace BetterNights;
+namespace BetterNightSkies;
 
 internal sealed class SkyMaterialController
 {
@@ -104,9 +104,9 @@ internal sealed class SkyMaterialController
             material.SetTexture(Settings.TexturePropertyName.Value, _assets.SourceNightSkyTexture);
         }
 
-        if (_assets.BackgroundTexture != null && material.HasProperty(ShaderProperties.BackgroundTex))
+        if (_assets.BackgroundCubemap != null && material.HasProperty(ShaderProperties.BackgroundCube))
         {
-            material.SetTexture(ShaderProperties.BackgroundTex, _assets.BackgroundTexture);
+            material.SetTexture(ShaderProperties.BackgroundCube, _assets.BackgroundCubemap);
         }
 
         ApplyShaderSettings(sky, material);
@@ -131,6 +131,7 @@ internal sealed class SkyMaterialController
     {
         SetMaterialFloat(material, ShaderProperties.Brightness, Settings.StarsBrightness.Value);
         SetMaterialFloat(material, ShaderProperties.BackgroundBrightness, Settings.BackgroundBrightness.Value);
+        SetMaterialFloat(material, ShaderProperties.BackgroundSaturation, Settings.BackgroundSaturation.Value);
         SetMaterialFloat(material, ShaderProperties.Saturation, Settings.SkySaturation.Value);
         SetMaterialFloat(material, ShaderProperties.TodVisibility, CalculateTodVisibility(sky));
         SetMaterialFloat(material, ShaderProperties.HorizonFadeStartDegrees, Settings.HorizonFadeStartDegrees.Value);

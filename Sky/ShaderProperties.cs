@@ -1,10 +1,11 @@
-namespace BetterNights;
+namespace BetterNightSkies;
 
 internal static class ShaderProperties
 {
-    internal const string BackgroundTex = "_BackgroundTex";
+    internal const string BackgroundCube = "_BackgroundCube";
     internal const string Brightness = "_Brightness";
     internal const string BackgroundBrightness = "_BackgroundBrightness";
+    internal const string BackgroundSaturation = "_BackgroundSaturation";
     internal const string Saturation = "_Saturation";
     internal const string TodVisibility = "_TodVisibility";
     internal const string HorizonFadeStartDegrees = "_HorizonFadeStartDegrees";

@@ -3,19 +3,21 @@ using System.IO;
 using BepInEx.Configuration;
 using UnityEngine;
 
-namespace BetterNights;
+namespace BetterNightSkies;
 
 internal static class Settings
 {
     internal const string DefaultBundleFileName = "nightsky.bundle";
-    internal const string DefaultTextureAssetName = "assets/Ringed Brown Dwarf.png";
+    internal const string DefaultTextureAssetName = "assets/ringed brown dwarf.png";
     internal const string DefaultMaterialAssetName = "assets/nightskymaterial.mat";
-    internal const string DefaultBackgroundTextureAssetName = "assets/Background Stars.png";
+    internal const string DefaultBackgroundTextureAssetName = "assets/backgroundstars_cubemapstrip_posx_negx_posy_negy_posz_negz.png";
     internal const string DefaultTexturePropertyName = "_MainTex";
 
     internal static readonly List<ConfigEntryBase> ConfigEntries = new List<ConfigEntryBase>();
+    internal static string[] TextureAssetNames = new string[0];
 
     internal static ConfigEntry<bool> ModEnabled;
+    internal static ConfigEntry<bool> RandomMainTextureOnRaidStart;
 
     internal static ConfigEntry<string> BundleFileName;
     internal static ConfigEntry<string> TextureAssetName;
@@ -26,6 +28,7 @@ internal static class Settings
 
     internal static ConfigEntry<float> StarsBrightness;
     internal static ConfigEntry<float> BackgroundBrightness;
+    internal static ConfigEntry<float> BackgroundSaturation;
     internal static ConfigEntry<float> SkySaturation;
     internal static ConfigEntry<float> FadeTimeMultiplier;
 
@@ -62,15 +65,23 @@ internal static class Settings
                 null,
                 new global::ConfigurationManagerAttributes { IsAdvanced = false, ShowRangeAsPercent = false })));
 
+        ConfigEntries.Add(RandomMainTextureOnRaidStart = config.Bind("General", "Random Main Texture On Raid Start", true,
+            new ConfigDescription(
+                "Randomly selects the main sky texture when a raid starts.",
+                null,
+                new global::ConfigurationManagerAttributes { IsAdvanced = false, ShowRangeAsPercent = false })));
+
         ConfigEntries.Add(BundleFileName = config.Bind("Textures", "BundleFileName", "nightsky.bundle",
             new ConfigDescription(
                 "Main asset bundle file name.",
                 null,
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
+        TextureAssetNames = GetTextureAssetNames(pluginDirectory, BundleFileName.Value, includeEmpty: false, DefaultTextureAssetName);
+
         ConfigEntries.Add(TextureAssetName = config.Bind("Textures", "Sky Texture", "assets/Ringed Brown Dwarf.png",
             CreateTextureAssetDescription(
-                GetTextureAssetNames(pluginDirectory, BundleFileName.Value, includeEmpty: false, DefaultTextureAssetName),
+                TextureAssetNames,
                 "Night sky texture.",
                 false)));
 
@@ -86,10 +97,10 @@ internal static class Settings
                 null,
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(BackgroundTextureAssetName = config.Bind("Textures", "BackgroundTextureAssetName", "assets/Background Stars.png",
+        ConfigEntries.Add(BackgroundTextureAssetName = config.Bind("Textures", "BackgroundTextureAssetName", DefaultBackgroundTextureAssetName,
             CreateTextureAssetDescription(
-                GetTextureAssetNames(pluginDirectory, BackgroundBundleFileName.Value, includeEmpty: false, DefaultBackgroundTextureAssetName),
-                "Optional background star texture asset in the bundle.",
+                GetCubemapAssetNames(pluginDirectory, BackgroundBundleFileName.Value, includeEmpty: false, DefaultBackgroundTextureAssetName),
+                "Optional background star cubemap asset in the bundle.",
                 true)));
 
         ConfigEntries.Add(TexturePropertyName = config.Bind("Textures", "TexturePropertyName", "_MainTex",
@@ -104,16 +115,22 @@ internal static class Settings
                 new AcceptableValueRange<float>(0f, 5f),
                 new global::ConfigurationManagerAttributes { IsAdvanced = false, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(BackgroundBrightness = config.Bind("Stars", "Stars brightness", 1f,
+        ConfigEntries.Add(BackgroundBrightness = config.Bind("Stars", "Stars brightness", 0.5f,
             new ConfigDescription(
                 "Background stars brightness.",
                 new AcceptableValueRange<float>(0f, 5f),
                 new global::ConfigurationManagerAttributes { IsAdvanced = false, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(SkySaturation = config.Bind("Sky", "Saturation", 2.5f,
+        ConfigEntries.Add(BackgroundSaturation = config.Bind("Stars", "Stars saturation", 1f,
+            new ConfigDescription(
+                "Background stars saturation. 0 = grayscale, 1 = original, >1 = more saturated.",
+                new AcceptableValueRange<float>(-10f, 10f),
+                new global::ConfigurationManagerAttributes { IsAdvanced = false, ShowRangeAsPercent = false })));
+
+        ConfigEntries.Add(SkySaturation = config.Bind("Sky", "Saturation", 1f,
             new ConfigDescription(
                 "Sky color saturation. 0 = grayscale, 1 = original, >1 = more saturated.",
-                new AcceptableValueRange<float>(0f, 10f),
+                new AcceptableValueRange<float>(-10f, 10f),
                 new global::ConfigurationManagerAttributes { IsAdvanced = false, ShowRangeAsPercent = false })));
 
         ConfigEntries.Add(FadeTimeMultiplier = config.Bind("General", "Time of Day Fade Multiplier", 1.6f,
@@ -230,7 +247,7 @@ internal static class Settings
                 new AcceptableValueRange<float>(0f, 1f),
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = true })));
 
-        ConfigEntries.Add(MainVerticalFade = config.Bind("Sky", "MainVerticalFade", 0.6f,
+        ConfigEntries.Add(MainVerticalFade = config.Bind("Sky", "MainVerticalFade", 0.4f,
             new ConfigDescription(
                 "Soft vertical alpha fade at the top/bottom of the main texture UV range.",
                 new AcceptableValueRange<float>(0f, 1f),
@@ -263,6 +280,25 @@ internal static class Settings
         bool includeEmpty,
         string defaultAssetName)
     {
+        return GetAssetNames<Texture2D>(pluginDirectory, bundleFileName, includeEmpty, defaultAssetName);
+    }
+
+    private static string[] GetCubemapAssetNames(
+        string pluginDirectory,
+        string bundleFileName,
+        bool includeEmpty,
+        string defaultAssetName)
+    {
+        return GetAssetNames<Cubemap>(pluginDirectory, bundleFileName, includeEmpty, defaultAssetName);
+    }
+
+    private static string[] GetAssetNames<T>(
+        string pluginDirectory,
+        string bundleFileName,
+        bool includeEmpty,
+        string defaultAssetName)
+        where T : UnityEngine.Object
+    {
         string bundlePath = Path.Combine(pluginDirectory, bundleFileName);
         List<string> assetNames = new List<string>();
 
@@ -281,7 +317,7 @@ internal static class Settings
 
         foreach (string assetName in bundle.GetAllAssetNames())
         {
-            if (bundle.LoadAsset<Texture2D>(assetName) != null)
+            if (bundle.LoadAsset<T>(assetName) != null)
                 AddUnique(assetNames, assetName);
         }
 
