@@ -139,8 +139,8 @@ internal sealed class SkyMaterialController
         SetMaterialFloat(material, ShaderProperties.HorizonFadeDebug, Settings.HorizonFadeDebug.Value ? 1f : 0f);
         SetMaterialFloat(material, ShaderProperties.HorizontalScale, Settings.HorizontalScale.Value);
         SetMaterialFloat(material, ShaderProperties.VerticalScale, Settings.VerticalScale.Value);
-        SetMaterialFloat(material, ShaderProperties.BackgroundHorizontalScale, Settings.BackgroundHorizontalScale.Value);
-        SetMaterialFloat(material, ShaderProperties.BackgroundVerticalScale, Settings.BackgroundVerticalScale.Value);
+        SetMaterialFloat(material, ShaderProperties.BackgroundHorizontalScale, Settings.BackgroundScale.Value);
+        SetMaterialFloat(material, ShaderProperties.BackgroundVerticalScale, Settings.BackgroundScale.Value);
         SetMaterialFloat(material, ShaderProperties.HorizontalOffsetDegrees, Settings.HorizontalOffsetDegrees.Value);
         SetMaterialFloat(material, ShaderProperties.VerticalOffsetDegrees, Settings.VerticalOffsetDegrees.Value);
         SetMaterialFloat(material, ShaderProperties.BackgroundHorizontalOffsetDegrees, Settings.BackgroundHorizontalOffsetDegrees.Value);
@@ -151,6 +151,7 @@ internal sealed class SkyMaterialController
         SetMaterialFloat(material, ShaderProperties.MainBandWidth, Settings.MainBandWidth.Value);
         SetMaterialFloat(material, ShaderProperties.MainBandHeight, Settings.MainBandHeight.Value);
         SetMaterialFloat(material, ShaderProperties.MainClampToTransparent, Settings.MainClampToTransparent.Value ? 1f : 0f);
+        SetMaterialFloat(material, ShaderProperties.MainHorizontalFade, Settings.MainHorizontalFade.Value);
         SetMaterialFloat(material, ShaderProperties.MainVerticalFade, Settings.MainVerticalFade.Value);
         SetMaterialFloat(material, ShaderProperties.YawDegrees, Settings.YawDegrees.Value);
         SetMaterialFloat(material, ShaderProperties.PitchDegrees, Settings.PitchDegrees.Value);

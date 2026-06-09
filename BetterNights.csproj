@@ -8,7 +8,7 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <TarkovPath>D:\Games\Tarkov\SPT Main\</TarkovPath>
+    <TarkovPath>C:\Games\SPT\</TarkovPath>
     <ModName>BetterNights</ModName>
     <PackageStagingDir>$(OutputPath)package</PackageStagingDir>
     <PackagePluginDir>$(PackageStagingDir)\BepInEx\plugins\$(ModName)</PackagePluginDir>

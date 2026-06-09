@@ -17,6 +17,8 @@ public sealed class Plugin : BaseUnityPlugin
     private ManualLogSource _log;
     private BundleAssetLoader _assetLoader;
     private SkyMaterialController _skyController;
+    private Coroutine _loadAssetsCoroutine;
+    private bool _reloadAssetsPending;
 
     private void Awake()
     {
@@ -32,7 +34,7 @@ public sealed class Plugin : BaseUnityPlugin
         Settings.BackgroundTextureAssetName.SettingChanged += (_, _) => ReloadAssets();
         Settings.ModEnabled.SettingChanged += (_, _) => _skyController.MarkDirty();
 
-        LoadAssets();
+        QueueAssetLoad();
         StartCoroutine(ApplyWhenSkyExists());
 
         _log.LogInfo($"{PluginName} {PluginVersion} loaded.");
@@ -41,12 +43,45 @@ public sealed class Plugin : BaseUnityPlugin
     private void ReloadAssets()
     {
         _log.LogInfo("Reloading night sky textures after config change.");
-        LoadAssets();
+        QueueAssetLoad();
     }
 
-    private void LoadAssets()
+    private void OnDestroy()
     {
-        _skyController.SetAssets(_assetLoader.Load());
+        if (_loadAssetsCoroutine != null)
+        {
+            StopCoroutine(_loadAssetsCoroutine);
+            _loadAssetsCoroutine = null;
+        }
+
+        if (_assetLoader != null)
+            _assetLoader.Unload();
+    }
+
+    private void QueueAssetLoad()
+    {
+        if (_loadAssetsCoroutine != null)
+        {
+            _reloadAssetsPending = true;
+            return;
+        }
+
+        _loadAssetsCoroutine = StartCoroutine(LoadAssetsAsync());
+    }
+
+    private IEnumerator LoadAssetsAsync()
+    {
+        do
+        {
+            _reloadAssetsPending = false;
+            SkyAssets assets = null;
+
+            yield return _assetLoader.LoadAsync(loadedAssets => assets = loadedAssets);
+            _skyController.SetAssets(assets);
+        }
+        while (_reloadAssetsPending);
+
+        _loadAssetsCoroutine = null;
     }
 
     private IEnumerator ApplyWhenSkyExists()

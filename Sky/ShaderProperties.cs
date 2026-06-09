@@ -25,6 +25,7 @@ internal static class ShaderProperties
     internal const string MainBandWidth = "_MainBandWidth";
     internal const string MainBandHeight = "_MainBandHeight";
     internal const string MainClampToTransparent = "_MainClampToTransparent";
+    internal const string MainHorizontalFade = "_MainHorizontalFade";
     internal const string MainVerticalFade = "_MainVerticalFade";
     internal const string YawDegrees = "_YawDegrees";
     internal const string PitchDegrees = "_PitchDegrees";

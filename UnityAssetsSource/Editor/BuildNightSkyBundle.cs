@@ -56,6 +56,7 @@ public static class BuildNightSkyBundle
         material.SetFloat("_MainBandWidth", 1f);
         material.SetFloat("_MainBandHeight", 0.3f);
         material.SetFloat("_MainClampToTransparent", 1f);
+        material.SetFloat("_MainHorizontalFade", 0.05f);
         material.SetFloat("_MainVerticalFade", 0.5f);
         material.SetFloat("_YawDegrees", 180f);
         material.SetFloat("_PitchDegrees", 0f);

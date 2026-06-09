@@ -27,6 +27,7 @@ Shader "Fiodor/Night Sky Equirectangular"
         _MainBandWidth ("Main Band Width", Range(0.001, 1)) = 1
         _MainBandHeight ("Main Band Height", Range(0.001, 1)) = 0.5
         _MainClampToTransparent ("Main Clamp To Transparent", Float) = 1
+        _MainHorizontalFade ("Main Horizontal Fade", Range(0, 0.5)) = 0.02
         _MainVerticalFade ("Main Vertical Fade", Range(0, 0.5)) = 0.02
         _YawDegrees ("Yaw Degrees", Float) = 0
         _PitchDegrees ("Pitch Degrees", Float) = 0
@@ -81,6 +82,7 @@ Shader "Fiodor/Night Sky Equirectangular"
             float _MainBandWidth;
             float _MainBandHeight;
             float _MainClampToTransparent;
+            float _MainHorizontalFade;
             float _MainVerticalFade;
             float _YawDegrees;
             float _PitchDegrees;
@@ -148,8 +150,8 @@ Shader "Fiodor/Night Sky Equirectangular"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                float3 direction = normalize(i.direction);
                 float3 worldDirection = normalize(i.worldDirection);
+                float3 direction = worldDirection;
                 direction = RotateY(direction, _YawDegrees);
                 direction = RotateX(direction, _PitchDegrees);
                 direction = RotateZ(direction, _RollDegrees);
@@ -173,9 +175,14 @@ Shader "Fiodor/Night Sky Equirectangular"
                     float bandHeight = max(_MainBandHeight, 0.001);
                     float wrappedDeltaU = frac(u - _MainBandCenterU + 0.5) - 0.5;
                     float deltaV = v - _MainBandCenterV;
+                    float halfBandWidth = bandWidth * 0.5;
+                    float horizontalEdgeDistance = halfBandWidth - abs(wrappedDeltaU);
+                    float horizontalFade = saturate(horizontalEdgeDistance / max(_MainHorizontalFade * bandWidth, 0.00001));
+                    float horizontalInside = (bandWidth >= 0.999) ? 1.0 :
+                        ((_MainHorizontalFade <= 0.00001) ? step(abs(wrappedDeltaU), halfBandWidth) : horizontalFade);
 
                     mainBandInside =
-                        step(abs(wrappedDeltaU), bandWidth * 0.5) *
+                        horizontalInside *
                         step(abs(deltaV), bandHeight * 0.5);
 
                     mainU = wrappedDeltaU / bandWidth + 0.5;

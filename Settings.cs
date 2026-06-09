@@ -35,8 +35,7 @@ internal static class Settings
     internal static ConfigEntry<float> HorizonFadeEndDegrees;
     internal static ConfigEntry<float> HorizonBrightnessMultiplier;
     internal static ConfigEntry<bool> HorizonFadeDebug;
-    internal static ConfigEntry<float> BackgroundHorizontalScale;
-    internal static ConfigEntry<float> BackgroundVerticalScale;
+    internal static ConfigEntry<float> BackgroundScale;
     internal static ConfigEntry<float> HorizontalOffsetDegrees;
     internal static ConfigEntry<float> VerticalOffsetDegrees;
     internal static ConfigEntry<float> BackgroundHorizontalOffsetDegrees;
@@ -47,6 +46,7 @@ internal static class Settings
     internal static ConfigEntry<float> MainBandWidth;
     internal static ConfigEntry<float> MainBandHeight;
     internal static ConfigEntry<bool> MainClampToTransparent;
+    internal static ConfigEntry<float> MainHorizontalFade;
     internal static ConfigEntry<float> MainVerticalFade;
     internal static ConfigEntry<float> YawDegrees;
     internal static ConfigEntry<float> PitchDegrees;
@@ -98,13 +98,13 @@ internal static class Settings
                 null,
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(StarsBrightness = config.Bind("Sky", "Sky brightness", 1f,
+        ConfigEntries.Add(StarsBrightness = config.Bind("Sky", "Sky brightness", 0.5f,
             new ConfigDescription(
                 "Sky brightness.",
                 new AcceptableValueRange<float>(0f, 5f),
                 new global::ConfigurationManagerAttributes { IsAdvanced = false, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(BackgroundBrightness = config.Bind("Stars", "Stars brightness", 3f,
+        ConfigEntries.Add(BackgroundBrightness = config.Bind("Stars", "Stars brightness", 1f,
             new ConfigDescription(
                 "Background stars brightness.",
                 new AcceptableValueRange<float>(0f, 5f),
@@ -116,7 +116,7 @@ internal static class Settings
                 new AcceptableValueRange<float>(0f, 10f),
                 new global::ConfigurationManagerAttributes { IsAdvanced = false, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(FadeTimeMultiplier = config.Bind("General", "Time of Day Fade Multiplier", 1.5f,
+        ConfigEntries.Add(FadeTimeMultiplier = config.Bind("General", "Time of Day Fade Multiplier", 1.6f,
             new ConfigDescription(
                 "Higher values make the night sky appear later and disappear sooner.",
                 new AcceptableValueRange<float>(0f, 3f),
@@ -158,15 +158,9 @@ internal static class Settings
                 null,
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(BackgroundHorizontalScale = config.Bind("Stars", "Stars Horizontal Scale", 8f,
+        ConfigEntries.Add(BackgroundScale = config.Bind("Stars", "Stars Scale", 3f,
             new ConfigDescription(
-                "Background star texture horizontal scale.",
-                new AcceptableValueRange<float>(0.1f, 32f),
-                new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
-
-        ConfigEntries.Add(BackgroundVerticalScale = config.Bind("Stars", "Stars Vertical Scale", 8f,
-            new ConfigDescription(
-                "Background star texture vertical scale.",
+                "Background star texture scale.",
                 new AcceptableValueRange<float>(0.1f, 32f),
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
@@ -200,7 +194,7 @@ internal static class Settings
                 null,
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(MainBandCenterU = config.Bind("Sky", "MainBandCenterU", 0.5f,
+        ConfigEntries.Add(MainBandCenterU = config.Bind("Sky", "MainBandCenterU", 0f,
             new ConfigDescription(
                 "Main band horizontal center in normalized sky UV space.",
                 new AcceptableValueRange<float>(0f, 1f),
@@ -212,13 +206,13 @@ internal static class Settings
                 new AcceptableValueRange<float>(0f, 1f),
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(MainBandWidth = config.Bind("Sky", "MainBandWidth", 1f,
+        ConfigEntries.Add(MainBandWidth = config.Bind("Sky", "MainBandWidth", 0.8f,
             new ConfigDescription(
                 "Main band horizontal sky coverage. 1 = full 360 degrees, 0.5 = half the horizon.",
                 new AcceptableValueRange<float>(0.001f, 1f),
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = true })));
 
-        ConfigEntries.Add(MainBandHeight = config.Bind("Sky", "MainBandHeight", 0.25f,
+        ConfigEntries.Add(MainBandHeight = config.Bind("Sky", "MainBandHeight", 0.7f,
             new ConfigDescription(
                 "Main band vertical sky coverage. 0.5 = half the vertical skydome.",
                 new AcceptableValueRange<float>(0.001f, 1f),
@@ -229,6 +223,12 @@ internal static class Settings
                 "When enabled, the sky texture alpha becomes 0 outside its vertical 0..1 UV range.",
                 null,
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
+
+        ConfigEntries.Add(MainHorizontalFade = config.Bind("Sky", "MainHorizontalFade", 0.2f,
+            new ConfigDescription(
+                "Soft horizontal alpha fade at the left/right edges of the main band.",
+                new AcceptableValueRange<float>(0f, 1f),
+                new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = true })));
 
         ConfigEntries.Add(MainVerticalFade = config.Bind("Sky", "MainVerticalFade", 0.5f,
             new ConfigDescription(
@@ -242,13 +242,13 @@ internal static class Settings
                 new AcceptableValueRange<float>(-360f, 360f),
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(PitchDegrees = config.Bind("Sky", "PitchDegrees", 0f,
+        ConfigEntries.Add(PitchDegrees = config.Bind("Sky", "PitchDegrees", -50f,
             new ConfigDescription(
                 "Tilts the sky forward/backward.",
                 new AcceptableValueRange<float>(-180f, 180f),
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(RollDegrees = config.Bind("Sky", "RollDegrees", 0f,
+        ConfigEntries.Add(RollDegrees = config.Bind("Sky", "RollDegrees", 20f,
             new ConfigDescription(
                 "Rolls the sky around the forward axis.",
                 new AcceptableValueRange<float>(-180f, 180f),
