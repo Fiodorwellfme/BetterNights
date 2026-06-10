@@ -186,4 +186,113 @@ internal sealed class SkyMaterialController
             material.SetFloat(propertyName, value);
         }
     }
+
+    private static class ShaderProperties
+    {
+        internal const string BackgroundCube = "_BackgroundCube";
+        internal const string Brightness = "_Brightness";
+        internal const string BackgroundBrightness = "_BackgroundBrightness";
+        internal const string BackgroundSaturation = "_BackgroundSaturation";
+        internal const string Saturation = "_Saturation";
+        internal const string TodVisibility = "_TodVisibility";
+        internal const string HorizonFadeStartDegrees = "_HorizonFadeStartDegrees";
+        internal const string HorizonFadeEndDegrees = "_HorizonFadeEndDegrees";
+        internal const string HorizonBrightnessMultiplier = "_HorizonBrightnessMultiplier";
+        internal const string HorizonFadeDebug = "_HorizonFadeDebug";
+        internal const string HorizontalScale = "_HorizontalScale";
+        internal const string VerticalScale = "_VerticalScale";
+        internal const string BackgroundHorizontalScale = "_BackgroundHorizontalScale";
+        internal const string BackgroundVerticalScale = "_BackgroundVerticalScale";
+        internal const string HorizontalOffsetDegrees = "_HorizontalOffsetDegrees";
+        internal const string VerticalOffsetDegrees = "_VerticalOffsetDegrees";
+        internal const string BackgroundHorizontalOffsetDegrees = "_BackgroundHorizontalOffsetDegrees";
+        internal const string BackgroundVerticalOffsetDegrees = "_BackgroundVerticalOffsetDegrees";
+        internal const string MainBandEnabled = "_MainBandEnabled";
+        internal const string MainBandCenterU = "_MainBandCenterU";
+        internal const string MainBandCenterV = "_MainBandCenterV";
+        internal const string MainBandWidth = "_MainBandWidth";
+        internal const string MainBandHeight = "_MainBandHeight";
+        internal const string MainClampToTransparent = "_MainClampToTransparent";
+        internal const string MainHorizontalFade = "_MainHorizontalFade";
+        internal const string MainVerticalFade = "_MainVerticalFade";
+        internal const string YawDegrees = "_YawDegrees";
+        internal const string PitchDegrees = "_PitchDegrees";
+        internal const string RollDegrees = "_RollDegrees";
+    }
+
+    private sealed class VanillaSkyState
+    {
+        private Material _spaceMaterial;
+        private Material _rendererMaterial;
+        private Texture _spaceTexture;
+        private float _starsBrightness;
+        private Vector3 _domeScale;
+
+        internal bool Captured { get; private set; }
+
+        internal void Reset()
+        {
+            _spaceMaterial = null;
+            _rendererMaterial = null;
+            _spaceTexture = null;
+            _starsBrightness = 0f;
+            _domeScale = Vector3.zero;
+            Captured = false;
+        }
+
+        internal void Capture(TOD_Sky sky)
+        {
+            if (Captured || sky.Resources == null)
+                return;
+
+            _spaceMaterial = sky.Resources.SpaceMaterial;
+            _rendererMaterial = sky.Components != null && sky.Components.SpaceRenderer != null
+                ? sky.Components.SpaceRenderer.sharedMaterial
+                : null;
+
+            if (_spaceMaterial != null && _spaceMaterial.HasProperty(Settings.TexturePropertyName.Value))
+            {
+                _spaceTexture = _spaceMaterial.GetTexture(Settings.TexturePropertyName.Value);
+            }
+
+            _starsBrightness = sky.Stars.Brightness;
+            _domeScale = sky.Components != null && sky.Components.DomeTransform != null
+                ? sky.Components.DomeTransform.localScale
+                : Vector3.zero;
+            Captured = true;
+        }
+
+        internal void Restore(TOD_Sky sky)
+        {
+            if (!Captured || sky.Resources == null)
+                return;
+
+            if (_spaceMaterial != null)
+            {
+                sky.Resources.SpaceMaterial = _spaceMaterial;
+
+                if (_spaceMaterial.HasProperty(Settings.TexturePropertyName.Value))
+                {
+                    _spaceMaterial.SetTexture(Settings.TexturePropertyName.Value, _spaceTexture);
+                }
+            }
+
+            if (sky.Components != null && sky.Components.SpaceRenderer != null && _rendererMaterial != null)
+            {
+                sky.Components.SpaceRenderer.sharedMaterial = _rendererMaterial;
+            }
+
+            sky.Stars.Brightness = _starsBrightness;
+
+            if (sky.Components != null && sky.Components.DomeTransform != null && _domeScale != Vector3.zero)
+            {
+                sky.Components.DomeTransform.localScale = _domeScale;
+            }
+        }
+
+        internal Vector3 GetDomeScale()
+        {
+            return _domeScale;
+        }
+    }
 }

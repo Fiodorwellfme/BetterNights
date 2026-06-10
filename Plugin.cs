@@ -36,7 +36,6 @@ public sealed class Plugin : BaseUnityPlugin
         _assetLoader = new BundleAssetLoader(pluginDirectory, _log);
         _skyController = new SkyMaterialController(_log);
         new RaidStartPatch().Enable();
-        new SkyInitializedPatch().Enable();
 
         SubscribeSettings();
 
@@ -76,13 +75,10 @@ public sealed class Plugin : BaseUnityPlugin
             Instance = null;
     }
 
-    internal void OnRaidStarted()
+    internal void OnRaidStarted(TOD_Sky sky)
     {
         TryRandomizeMainTextureForRaid();
-    }
 
-    internal void OnSkyInitialized(TOD_Sky sky)
-    {
         _currentSky = sky;
         _skyController.ResetForMissingSky();
         ApplyCurrentSky();

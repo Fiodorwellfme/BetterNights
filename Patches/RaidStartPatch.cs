@@ -1,18 +1,30 @@
+using Comfort.Common;
 using System.Reflection;
 using EFT;
 using HarmonyLib;
 using SPT.Reflection.Patching;
+using UnityEngine;
 
 namespace BetterNightSkies.Patches;
 
 internal sealed class RaidStartPatch : ModulePatch
 {
     protected override MethodBase GetTargetMethod()
-        => AccessTools.Method(typeof(GameWorld), nameof(GameWorld.OnGameStarted));
+        => AccessTools.Method(typeof(BloodOnScreen), nameof(BloodOnScreen.Start));
 
-    [PatchPostfix]
-    private static void Postfix()
+    [PatchPrefix]
+    private static void Prefix()
     {
-        Plugin.Instance?.OnRaidStarted();
+        GameWorld gameWorld = Singleton<GameWorld>.Instance;
+        Player player = gameWorld?.MainPlayer;
+
+        if (player == null || player is HideoutPlayer)
+            return;
+
+        TOD_Sky sky = Object.FindObjectOfType<TOD_Sky>();
+        if (sky == null)
+            return;
+
+        Plugin.Instance?.OnRaidStarted(sky);
     }
 }
