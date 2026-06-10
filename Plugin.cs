@@ -195,6 +195,7 @@ public sealed class Plugin : BaseUnityPlugin
         SubscribeSetting(Settings.BackgroundSaturation);
         SubscribeSetting(Settings.SkySaturation);
         SubscribeSetting(Settings.FadeTimeMultiplier);
+        SubscribeSetting(Settings.SkyDomeScaleMultiplier);
         SubscribeSetting(Settings.HorizontalScale);
         SubscribeSetting(Settings.VerticalScale);
         SubscribeSetting(Settings.HorizonFadeStartDegrees);
@@ -234,6 +235,7 @@ public sealed class Plugin : BaseUnityPlugin
         UnsubscribeSetting(Settings.BackgroundSaturation);
         UnsubscribeSetting(Settings.SkySaturation);
         UnsubscribeSetting(Settings.FadeTimeMultiplier);
+        UnsubscribeSetting(Settings.SkyDomeScaleMultiplier);
         UnsubscribeSetting(Settings.HorizontalScale);
         UnsubscribeSetting(Settings.VerticalScale);
         UnsubscribeSetting(Settings.HorizonFadeStartDegrees);

@@ -5,7 +5,7 @@ using UnityEngine;
 public static class BuildNightSkyBundle
 {
     private const string OutputPath = "AssetBundles";
-    private const string BackgroundCubemapPath = "Assets/BackgroundStars_CubemapStrip_PosX_NegX_PosY_NegY_PosZ_NegZ.png";
+    private const string BackgroundCubemapPath = "Assets/backgroundstars.png";
     private const string ShaderPath = "Assets/NightSkyEquirectangular.shader";
     private const string MaterialPath = "Assets/NightSkyMaterial.mat";
     private const string BundleName = "nightsky.bundle";

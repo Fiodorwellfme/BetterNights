@@ -8,6 +8,7 @@ internal sealed class VanillaSkyState
     private Material _rendererMaterial;
     private Texture _spaceTexture;
     private float _starsBrightness;
+    private Vector3 _domeScale;
 
     internal bool Captured { get; private set; }
 
@@ -17,6 +18,7 @@ internal sealed class VanillaSkyState
         _rendererMaterial = null;
         _spaceTexture = null;
         _starsBrightness = 0f;
+        _domeScale = Vector3.zero;
         Captured = false;
     }
 
@@ -36,6 +38,9 @@ internal sealed class VanillaSkyState
         }
 
         _starsBrightness = sky.Stars.Brightness;
+        _domeScale = sky.Components != null && sky.Components.DomeTransform != null
+            ? sky.Components.DomeTransform.localScale
+            : Vector3.zero;
         Captured = true;
     }
 
@@ -60,5 +65,15 @@ internal sealed class VanillaSkyState
         }
 
         sky.Stars.Brightness = _starsBrightness;
+
+        if (sky.Components != null && sky.Components.DomeTransform != null && _domeScale != Vector3.zero)
+        {
+            sky.Components.DomeTransform.localScale = _domeScale;
+        }
+    }
+
+    internal Vector3 GetDomeScale()
+    {
+        return _domeScale;
     }
 }

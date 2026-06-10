@@ -45,6 +45,7 @@ internal sealed class SkyMaterialController
             return;
 
         _vanillaSkyState.Capture(sky);
+        ApplyDomeScale(sky);
 
         if (_assets.ReplacementMaterial != null)
         {
@@ -157,6 +158,18 @@ internal sealed class SkyMaterialController
         SetMaterialFloat(material, ShaderProperties.YawDegrees, Settings.YawDegrees.Value);
         SetMaterialFloat(material, ShaderProperties.PitchDegrees, Settings.PitchDegrees.Value);
         SetMaterialFloat(material, ShaderProperties.RollDegrees, Settings.RollDegrees.Value);
+    }
+
+    private void ApplyDomeScale(TOD_Sky sky)
+    {
+        if (sky.Components == null || sky.Components.DomeTransform == null)
+            return;
+
+        Vector3 vanillaScale = _vanillaSkyState.GetDomeScale();
+        if (vanillaScale == Vector3.zero)
+            return;
+
+        sky.Components.DomeTransform.localScale = vanillaScale * Settings.SkyDomeScaleMultiplier.Value;
     }
 
     private static float CalculateTodVisibility(TOD_Sky sky)

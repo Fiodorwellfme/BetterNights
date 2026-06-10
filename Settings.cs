@@ -10,7 +10,7 @@ internal static class Settings
     internal const string DefaultBundleFileName = "nightsky.bundle";
     internal const string DefaultTextureAssetName = "assets/ringed brown dwarf.png";
     internal const string DefaultMaterialAssetName = "assets/nightskymaterial.mat";
-    internal const string DefaultBackgroundTextureAssetName = "assets/backgroundstars_cubemapstrip_posx_negx_posy_negy_posz_negz.png";
+    internal const string DefaultBackgroundTextureAssetName = "assets/backgroundstars.png";
     internal const string DefaultTexturePropertyName = "_MainTex";
 
     internal static readonly List<ConfigEntryBase> ConfigEntries = new List<ConfigEntryBase>();
@@ -31,6 +31,7 @@ internal static class Settings
     internal static ConfigEntry<float> BackgroundSaturation;
     internal static ConfigEntry<float> SkySaturation;
     internal static ConfigEntry<float> FadeTimeMultiplier;
+    internal static ConfigEntry<float> SkyDomeScaleMultiplier;
 
     internal static ConfigEntry<float> HorizontalScale;
     internal static ConfigEntry<float> VerticalScale;
@@ -71,7 +72,7 @@ internal static class Settings
                 null,
                 new global::ConfigurationManagerAttributes { IsAdvanced = false, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(BundleFileName = config.Bind("Textures", "BundleFileName", "nightsky.bundle",
+        ConfigEntries.Add(BundleFileName = config.Bind("Textures", "Main Bundle", "nightsky.bundle",
             new ConfigDescription(
                 "Main asset bundle file name.",
                 null,
@@ -85,19 +86,19 @@ internal static class Settings
                 "Night sky texture.",
                 false)));
 
-        ConfigEntries.Add(MaterialAssetName = config.Bind("Textures", "MaterialAssetName", "assets/nightskymaterial.mat",
+        ConfigEntries.Add(MaterialAssetName = config.Bind("Textures", "Material Asset", "assets/nightskymaterial.mat",
             new ConfigDescription(
                 "Material asset used for custom equirectangular sky rendering.",
                 null,
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(BackgroundBundleFileName = config.Bind("Textures", "BackgroundBundleFileName", "nightsky.bundle",
+        ConfigEntries.Add(BackgroundBundleFileName = config.Bind("Textures", "Background Bundle", "nightsky.bundle",
             new ConfigDescription(
                 "Optional background star asset bundle file name.",
                 null,
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(BackgroundTextureAssetName = config.Bind("Textures", "BackgroundTextureAssetName", DefaultBackgroundTextureAssetName,
+        ConfigEntries.Add(BackgroundTextureAssetName = config.Bind("Textures", "Background Texture Asset", DefaultBackgroundTextureAssetName,
             CreateTextureAssetDescription(
                 GetCubemapAssetNames(pluginDirectory, BackgroundBundleFileName.Value, includeEmpty: false, DefaultBackgroundTextureAssetName),
                 "Optional background star cubemap asset in the bundle.",
@@ -138,6 +139,12 @@ internal static class Settings
                 "Higher values make the night sky appear later and disappear sooner.",
                 new AcceptableValueRange<float>(0f, 3f),
                 new global::ConfigurationManagerAttributes { IsAdvanced = false, ShowRangeAsPercent = false })));
+
+        ConfigEntries.Add(SkyDomeScaleMultiplier = config.Bind("General", "Sky Dome Scale Multiplier", 1.5f,
+            new ConfigDescription(
+                "Scales the TOD sky dome. Higher values push the visible dome edge farther away.",
+                new AcceptableValueRange<float>(1f, 10f),
+                new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
         ConfigEntries.Add(HorizontalScale = config.Bind("Sky", "Horizontal Scale", 1f,
             new ConfigDescription(
