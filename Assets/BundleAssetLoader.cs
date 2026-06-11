@@ -12,9 +12,7 @@ internal sealed class BundleAssetLoader
     private readonly ManualLogSource _log;
 
     private AssetBundle _mainBundle;
-    private AssetBundle _backgroundBundle;
     private string _mainBundlePath;
-    private string _backgroundBundlePath;
     private string _materialAssetName;
     private Material _replacementMaterial;
 
@@ -30,7 +28,7 @@ internal sealed class BundleAssetLoader
         string bundlePath = Path.Combine(_pluginDirectory, Settings.BundleFileName.Value);
 
         AssetBundle bundle = null;
-        yield return LoadBundleAsync(bundlePath, true, loadedBundle => bundle = loadedBundle);
+        yield return LoadBundleAsync(bundlePath, loadedBundle => bundle = loadedBundle);
         if (bundle == null)
         {
             onLoaded(assets);
@@ -42,17 +40,7 @@ internal sealed class BundleAssetLoader
         assets.SourceNightSkyTexture = textureRequest.asset as Texture2D;
 
         yield return LoadMaterialAsync(bundle, loadedMaterial => assets.ReplacementMaterial = loadedMaterial);
-
-        if (assets.SourceNightSkyTexture == null && assets.ReplacementMaterial == null)
-        {
-            LogBundleAssetNames(bundle, bundlePath);
-
-            _log.LogError(
-                $"Neither texture asset '{Settings.TextureAssetName.Value}' nor material asset " +
-                $"'{Settings.MaterialAssetName.Value}' was found in {bundlePath}");
-            onLoaded(assets);
-            yield break;
-        }
+        yield return LoadBackgroundTextureAsync(bundle, bundlePath, assets);
 
         if (assets.SourceNightSkyTexture != null)
         {
@@ -66,35 +54,32 @@ internal sealed class BundleAssetLoader
             _log.LogInfo($"Loaded night sky material '{assets.ReplacementMaterial.name}'.");
         }
 
-        yield return LoadBackgroundTextureAsync(assets);
+        if (assets.SourceNightSkyTexture == null && assets.ReplacementMaterial == null)
+        {
+            LogBundleAssetNames(bundle, bundlePath);
+
+            _log.LogError(
+                $"Neither texture asset '{Settings.TextureAssetName.Value}', material asset " +
+                $"'{Settings.MaterialAssetName.Value}'");
+        }
+
         onLoaded(assets);
     }
 
     internal void Unload()
     {
-        if (_backgroundBundle != null && _backgroundBundle != _mainBundle)
-            _backgroundBundle.Unload(false);
-
         if (_mainBundle != null)
             _mainBundle.Unload(false);
 
         _mainBundle = null;
-        _backgroundBundle = null;
         _mainBundlePath = null;
-        _backgroundBundlePath = null;
         _materialAssetName = null;
         _replacementMaterial = null;
     }
 
-    private IEnumerator LoadBackgroundTextureAsync(SkyAssets assets)
+    private IEnumerator LoadBackgroundTextureAsync(AssetBundle bundle, string bundlePath, SkyAssets assets)
     {
         if (string.IsNullOrWhiteSpace(Settings.BackgroundTextureAssetName.Value))
-            yield break;
-
-        string bundlePath = Path.Combine(_pluginDirectory, Settings.BackgroundBundleFileName.Value);
-        AssetBundle bundle = null;
-        yield return LoadBundleAsync(bundlePath, false, loadedBundle => bundle = loadedBundle);
-        if (bundle == null)
             yield break;
 
         AssetBundleRequest cubemapRequest = bundle.LoadAssetAsync<Cubemap>(Settings.BackgroundTextureAssetName.Value);
@@ -128,44 +113,20 @@ internal sealed class BundleAssetLoader
         onLoaded(_replacementMaterial);
     }
 
-    private IEnumerator LoadBundleAsync(string bundlePath, bool mainBundle, Action<AssetBundle> onLoaded)
+    private IEnumerator LoadBundleAsync(string bundlePath, Action<AssetBundle> onLoaded)
     {
-        if (mainBundle)
+        if (_mainBundle != null && _mainBundlePath == bundlePath)
         {
-            if (_mainBundle != null && _mainBundlePath == bundlePath)
-            {
-                onLoaded(_mainBundle);
-                yield break;
-            }
-
-            if (_mainBundle != null)
-                Unload();
+            onLoaded(_mainBundle);
+            yield break;
         }
-        else
-        {
-            if (_mainBundle != null && _mainBundlePath == bundlePath)
-            {
-                onLoaded(_mainBundle);
-                yield break;
-            }
 
-            if (_backgroundBundle != null && _backgroundBundlePath == bundlePath)
-            {
-                onLoaded(_backgroundBundle);
-                yield break;
-            }
-
-            if (_backgroundBundle != null)
-            {
-                _backgroundBundle.Unload(false);
-                _backgroundBundle = null;
-                _backgroundBundlePath = null;
-            }
-        }
+        if (_mainBundle != null)
+            Unload();
 
         if (!File.Exists(bundlePath))
         {
-            _log.LogError($"{(mainBundle ? "Night sky" : "Background star")} bundle not found: {bundlePath}");
+            _log.LogError($"Night sky bundle not found: {bundlePath}");
             onLoaded(null);
             yield break;
         }
@@ -176,23 +137,15 @@ internal sealed class BundleAssetLoader
         AssetBundle bundle = bundleRequest.assetBundle;
         if (bundle == null)
         {
-            _log.LogError($"Failed to load {(mainBundle ? "night sky" : "background star")} bundle: {bundlePath}");
+            _log.LogError($"Failed to load night sky bundle: {bundlePath}");
             onLoaded(null);
             yield break;
         }
 
-        if (mainBundle)
-        {
-            _mainBundle = bundle;
-            _mainBundlePath = bundlePath;
-            _materialAssetName = null;
-            _replacementMaterial = null;
-        }
-        else
-        {
-            _backgroundBundle = bundle;
-            _backgroundBundlePath = bundlePath;
-        }
+        _mainBundle = bundle;
+        _mainBundlePath = bundlePath;
+        _materialAssetName = null;
+        _replacementMaterial = null;
 
         onLoaded(bundle);
     }

@@ -22,7 +22,6 @@ internal static class Settings
     internal static ConfigEntry<string> BundleFileName;
     internal static ConfigEntry<string> TextureAssetName;
     internal static ConfigEntry<string> MaterialAssetName;
-    internal static ConfigEntry<string> BackgroundBundleFileName;
     internal static ConfigEntry<string> BackgroundTextureAssetName;
     internal static ConfigEntry<string> TexturePropertyName;
 
@@ -92,15 +91,9 @@ internal static class Settings
                 null,
                 new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
 
-        ConfigEntries.Add(BackgroundBundleFileName = config.Bind("Textures", "Background Bundle", "nightsky.bundle",
-            new ConfigDescription(
-                "Optional background star asset bundle file name.",
-                null,
-                new global::ConfigurationManagerAttributes { IsAdvanced = true, ShowRangeAsPercent = false })));
-
         ConfigEntries.Add(BackgroundTextureAssetName = config.Bind("Textures", "Background Texture Asset", DefaultBackgroundTextureAssetName,
             CreateTextureAssetDescription(
-                GetCubemapAssetNames(pluginDirectory, BackgroundBundleFileName.Value, includeEmpty: false, DefaultBackgroundTextureAssetName),
+                GetCubemapAssetNames(pluginDirectory, BundleFileName.Value, includeEmpty: false, DefaultBackgroundTextureAssetName),
                 "Optional background star cubemap asset in the bundle.",
                 true)));
 

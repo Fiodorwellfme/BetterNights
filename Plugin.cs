@@ -44,6 +44,11 @@ public sealed class Plugin : BaseUnityPlugin
         _log.LogInfo($"{PluginName} {PluginVersion} loaded.");
     }
 
+    private void Update()
+    {
+        _skyController.UpdateTODVisibility(_currentSky);
+    }
+
     private void OnSettingChanged(object sender, EventArgs args)
     {
         ConfigEntryBase entry = sender as ConfigEntryBase;
@@ -172,7 +177,6 @@ public sealed class Plugin : BaseUnityPlugin
         return entry == Settings.BundleFileName ||
             entry == Settings.TextureAssetName ||
             entry == Settings.MaterialAssetName ||
-            entry == Settings.BackgroundBundleFileName ||
             entry == Settings.BackgroundTextureAssetName;
     }
 
@@ -183,7 +187,6 @@ public sealed class Plugin : BaseUnityPlugin
         SubscribeSetting(Settings.BundleFileName);
         SubscribeSetting(Settings.TextureAssetName);
         SubscribeSetting(Settings.MaterialAssetName);
-        SubscribeSetting(Settings.BackgroundBundleFileName);
         SubscribeSetting(Settings.BackgroundTextureAssetName);
         SubscribeSetting(Settings.TexturePropertyName);
         SubscribeSetting(Settings.StarsBrightness);
@@ -223,7 +226,6 @@ public sealed class Plugin : BaseUnityPlugin
         UnsubscribeSetting(Settings.BundleFileName);
         UnsubscribeSetting(Settings.TextureAssetName);
         UnsubscribeSetting(Settings.MaterialAssetName);
-        UnsubscribeSetting(Settings.BackgroundBundleFileName);
         UnsubscribeSetting(Settings.BackgroundTextureAssetName);
         UnsubscribeSetting(Settings.TexturePropertyName);
         UnsubscribeSetting(Settings.StarsBrightness);

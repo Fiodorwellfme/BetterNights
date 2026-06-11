@@ -179,6 +179,15 @@ internal sealed class SkyMaterialController
         return Mathf.Clamp01(fogVisibility * nightVisibility);
     }
 
+    internal void UpdateTODVisibility(TOD_Sky sky)
+    {
+        if (sky == null || sky.Resources == null || sky.Resources.SpaceMaterial == null || !Settings.ModEnabled.Value)
+            return;
+
+        Material material = sky.Resources.SpaceMaterial;
+        SetMaterialFloat(material, ShaderProperties.TodVisibility, CalculateTodVisibility(sky));
+    }
+
     private static void SetMaterialFloat(Material material, string propertyName, float value)
     {
         if (material.HasProperty(propertyName))

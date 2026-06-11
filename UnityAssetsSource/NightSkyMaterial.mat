@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: NightSkyMaterial
+  m_Shader: {fileID: 4800000, guid: 637b3ec6eb4d46744a3a6a6a50d11d8a, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BackgroundCube:
+        m_Texture: {fileID: 8900000, guid: 7e7cda5802529a34ba6371e0b19b1b93, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BackgroundBrightness: 3
+    - _BackgroundHorizontalOffsetDegrees: 0
+    - _BackgroundHorizontalScale: 3
+    - _BackgroundSaturation: 1
+    - _BackgroundVerticalOffsetDegrees: 0
+    - _BackgroundVerticalScale: 3
+    - _Brightness: 0.5
+    - _HorizonBrightnessMultiplier: 0.25
+    - _HorizonFadeDebug: 0
+    - _HorizonFadeEndDegrees: 25
+    - _HorizonFadeStartDegrees: 0
+    - _HorizontalOffsetDegrees: 0
+    - _HorizontalScale: 1
+    - _MainBandCenterU: 0.5
+    - _MainBandCenterV: 0.5
+    - _MainBandEnabled: 1
+    - _MainBandHeight: 0.3
+    - _MainBandWidth: 1
+    - _MainClampToTransparent: 1
+    - _MainHorizontalFade: 0.05
+    - _MainVerticalFade: 0.5
+    - _PitchDegrees: 0
+    - _RollDegrees: 0
+    - _Saturation: 2.5
+    - _TodVisibility: 1
+    - _VerticalOffsetDegrees: 0
+    - _VerticalScale: 1
+    - _YawDegrees: 180
+    m_Colors:
+    - _Tint: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
