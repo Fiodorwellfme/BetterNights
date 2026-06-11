@@ -11,11 +11,11 @@ Adds several night sky textures + a star cubemap at the high cost of 0 FPS.
 
 ## Vanilla:
 
- ![]https://github.com/Fiodorwellfme/Better-Night-Skies/blob/main/Examples/vanilla.png?raw=true)
+ ![](https://github.com/Fiodorwellfme/Better-Night-Skies/blob/main/Examples/vanilla.png?raw=true)
 
 ## Moddded:
 
- ![]https://github.com/Fiodorwellfme/Better-Night-Skies/blob/main/Examples/modded.png?raw=true)
+ ![](https://github.com/Fiodorwellfme/Better-Night-Skies/blob/main/Examples/modded.png?raw=true)
 
 ---
 
